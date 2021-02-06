@@ -1,0 +1,62 @@
+﻿using NRKernal;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class FocusManager : MonoBehaviour
+{
+    public Text m_TipsInfo;
+    private Transform m_HeadTransfrom;
+    private Vector3 m_FocusPosition;
+    RaycastHit hitResult;
+    private FocusItem currentFocusItem;
+
+    void Start()
+    {
+        m_HeadTransfrom = transform;
+
+        NRInput.ReticleVisualActive = false;
+        NRInput.LaserVisualActive = false;
+    }
+
+    private System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+    void Update()
+    {
+        if (Physics.Raycast(new Ray(m_HeadTransfrom.position, m_HeadTransfrom.forward), out hitResult, 100))
+        {
+            m_FocusPosition = m_HeadTransfrom.InverseTransformPoint(hitResult.point);
+
+            var item = hitResult.collider.GetComponent<FocusItem>();
+            if (item != null && currentFocusItem != item)
+            {
+                currentFocusItem?.OnOut();
+
+                currentFocusItem = item;
+                currentFocusItem.OnEnter();
+            }
+            NRSessionManager.Instance.NRRenderer?.SetFocusDistance(m_FocusPosition.magnitude);
+        }
+        else
+        {
+            currentFocusItem?.OnOut();
+            currentFocusItem = null;
+        }
+
+        if (Time.frameCount % 100 == 0 || stopwatch.ElapsedMilliseconds >= 20)
+        {
+            Debug.Log("time cost a frame:" + stopwatch.ElapsedMilliseconds);
+        }
+        stopwatch.Reset();
+        stopwatch.Start();
+
+        m_TipsInfo.text = string.Format("Depth:{0}", m_FocusPosition.z);
+    }
+
+    void OnDrawGizmos()
+    {
+        if (hitResult.collider != null)
+        {
+            Gizmos.DrawSphere(hitResult.point, 0.1f);
+            Gizmos.DrawLine(m_HeadTransfrom.position, hitResult.point);
+        }
+    }
+}
