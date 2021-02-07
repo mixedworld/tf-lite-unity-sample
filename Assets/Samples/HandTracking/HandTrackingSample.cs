@@ -24,6 +24,7 @@ public class HandTrackingSample : MonoBehaviour
     [SerializeField] bool flipVertical = false;
     [SerializeField] bool drawFrames = false;
     [SerializeField] bool worldSpace = false;
+
     [SerializeField] float localScaleFac = 0.000185f;
 
 
@@ -258,13 +259,19 @@ public class HandTrackingSample : MonoBehaviour
             worldJoints[i] = p1;
         }
 
-        // sphere
+        Transform p = rightHand.transform.parent;
+
+        rightHand.transform.SetParent(null);
+        Quaternion q = rightHand.transform.rotation;
+        Vector3 pos = rightHand.transform.position;
+        rightHand.transform.rotation = Quaternion.identity;
+        rightHand.transform.position = Vector3.zero;
+        // sphere joints
         for (int i = 0; i < HandLandmarkDetect.JOINT_COUNT; i++)
         {
             this.rightHand.Joints[i].localPosition = worldJoints[i];
             //draw.Cube(worldJoints[i], palmPointSize);
         }
-
         // Connection Lines
         var connections = HandLandmarkDetect.CONNECTIONS;
         for (int i = 0, n = 0; i < connections.Length; i += 2, n++)
@@ -272,26 +279,18 @@ public class HandTrackingSample : MonoBehaviour
             Vector3 wj0 = worldJoints[connections[i]];
             Vector3 wj1 = worldJoints[connections[i + 1]];
             rightHand.Bones[n].up = (wj1 - wj0);
-
-            //Quaternion q;
-            //Vector3 a = Vector3.Cross(wj0,wj1);
-            //q.x = a.x;
-            //q.y = a.y;
-            //q.z = a.z;
-            //q.w = Mathf.Sqrt(wj0.magnitude * wj1.magnitude) + Vector3.Dot(wj0, wj1);
-
-            //rightHand.Bones[n].localRotation = q.normalized;
             rightHand.Bones[n].localPosition = wj0;
-            //rightHand.Bones[n].localRotation = Quaternion.Inverse(rightHand.Bones[n].parent.parent.rotation) * rightHand.Bones[n].rotation;
-
             rightHand.Bones[n].localScale = new Vector3(0.001f,Vector3.Distance(wj0, wj1),0.001f);
             //draw.Line3D(
             //    worldJoints[connections[i]],
             //    worldJoints[connections[i + 1]],
             //    palmLineSize);
         }
-
-        draw.Apply();
+        // reparent and reset handposition and rotation
+        rightHand.transform.rotation = q;
+        rightHand.transform.position = pos;
+        rightHand.transform.SetParent(p, true);
+        //draw.Apply();
     }
 
     public void ToggleHorizontal()
