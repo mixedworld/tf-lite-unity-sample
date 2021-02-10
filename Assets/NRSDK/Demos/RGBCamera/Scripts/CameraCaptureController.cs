@@ -36,7 +36,8 @@ namespace NRKernal.NRExamples
         /// <summary> Updates this object. </summary>
         void Update()
         {
-            FrameCount.text = RGBCamTexture.FrameCount.ToString();
+            //FrameCount.text = RGBCamTexture.FrameCount.ToString();
+            FrameCount.text = $"Dimensions: {RGBCamTexture.Width}x{RGBCamTexture.Height}";
         }
 
         /// <summary> Plays this object. </summary>
@@ -47,6 +48,10 @@ namespace NRKernal.NRExamples
             // The origin texture will be destroyed after call "Stop",
             // Rebind the texture.
             CaptureImage.texture = RGBCamTexture.GetTexture();
+            // Nreal Cam Image is flipped vertically. So adjust for that.
+            CaptureImage.uvRect = new Rect(1, 0, -1, 1);
+            // Sometimes when a Raw Image if flipped it also needs to be rotated:
+            CaptureImage.rectTransform.localEulerAngles = new Vector3(0f, 0f, 180f);
         }
 
         /// <summary> Pauses this object. </summary>

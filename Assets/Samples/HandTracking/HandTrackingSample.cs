@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using TensorFlowLite;
 using Cysharp.Threading.Tasks;
 using MixedWorld.Util;
+using Microsoft.MixedReality.Toolkit.UI;
 
 public class HandTrackingSample : MonoBehaviour
 {
@@ -16,6 +17,8 @@ public class HandTrackingSample : MonoBehaviour
     [SerializeField] RawImage debugPalmView = null;
     [SerializeField] RectTransform handRect = null;
     [SerializeField] MWTrackableHand rightHand;
+    [SerializeField] RenderTexture targetRT = null;
+    [SerializeField] Material EffectsMat = null;
     [SerializeField] bool runBackground;
     [SerializeField] bool isNreal = true;
     [SerializeField] float palmPointSize = 1f;
@@ -25,8 +28,8 @@ public class HandTrackingSample : MonoBehaviour
     [SerializeField] bool drawFrames = false;
     [SerializeField] bool worldSpace = false;
 
+    // Should be something bigger. maybe 0.0004f
     [SerializeField] float localScaleFac = 0.000185f;
-
 
 
     WebCamTexture webcamTexture;
@@ -44,6 +47,9 @@ public class HandTrackingSample : MonoBehaviour
     CancellationToken cancellationToken;
 
 
+    // for Image effects
+    private Vector2 scale = new Vector2(1f, 1f);
+    private Vector2 offset = Vector2.zero;
 
     void Start()
     {
@@ -63,7 +69,9 @@ public class HandTrackingSample : MonoBehaviour
         //cameraName = "Integrated Camera";
         if (isNreal)
         {
-            nrealCamTexture = cameraView.texture;
+            nrealCamTexture = targetRT;
+            scale.y = -1f;
+            offset.y = 1f;
         }
         else
         {
@@ -72,7 +80,7 @@ public class HandTrackingSample : MonoBehaviour
             webcamTexture.Play();
             Debug.Log($"Starting camera: {cameraName}");
         }
-
+        targetRT.dimension = cameraView.texture.dimension;
         draw = new PrimitiveDraw();
     }
 
@@ -85,6 +93,9 @@ public class HandTrackingSample : MonoBehaviour
 
     void Update()
     {
+
+        Graphics.Blit(cameraView.texture, targetRT, EffectsMat);
+
         if (runBackground)
         {
             if (task.Status.IsCompleted())
@@ -96,7 +107,10 @@ public class HandTrackingSample : MonoBehaviour
         {
             Invoke();
         }
-
+        if (cameraView.texture.height != handRect.sizeDelta.y)
+        {
+            handRect.sizeDelta = new Vector2(cameraView.texture.width, cameraView.texture.height);
+        }
         if (palmResults == null || palmResults.Count <= 0) return;
         DrawFrames(palmResults);
 
@@ -109,7 +123,7 @@ public class HandTrackingSample : MonoBehaviour
     {
         if (isNreal)
         {
-            palmDetect.Invoke(cameraView.texture);
+            palmDetect.Invoke(targetRT);
         }
         else
         {
@@ -126,7 +140,8 @@ public class HandTrackingSample : MonoBehaviour
         }
         //cameraView.rectTransform.GetWorldCorners(rtCorners);
 
-        palmResults = palmDetect.GetResults(0.7f, 0.3f);
+        //palmResults = palmDetect.GetResults(0.7f, 0.3f);
+        palmResults = palmDetect.GetResults(0.5f, 0.3f);
 
 
         if (palmResults.Count <= 0) return;
@@ -134,7 +149,7 @@ public class HandTrackingSample : MonoBehaviour
         // Detect only first palm
         if (isNreal)
         {
-            landmarkDetect.Invoke(cameraView.texture, palmResults[0]);
+            landmarkDetect.Invoke(targetRT, palmResults[0]);
         }
         else
         {
@@ -149,7 +164,7 @@ public class HandTrackingSample : MonoBehaviour
     {
         if (isNreal)
         {
-            palmResults = await palmDetect.InvokeAsync(cameraView.texture, cancellationToken);
+            palmResults = await palmDetect.InvokeAsync(targetRT, cancellationToken);
         }
         else
         {
@@ -169,7 +184,7 @@ public class HandTrackingSample : MonoBehaviour
         if (palmResults.Count <= 0) return false;
         if (isNreal)
         {
-            landmarkResult = await landmarkDetect.InvokeAsync(cameraView.texture, palmResults[0], cancellationToken);
+            landmarkResult = await landmarkDetect.InvokeAsync(targetRT, palmResults[0], cancellationToken);
         }
         else
         {
@@ -232,8 +247,6 @@ public class HandTrackingSample : MonoBehaviour
 
     void DrawJoints(Vector3[] joints)
     {
-        draw.color = Color.blue;
-
         // Get World Corners
         Vector3 min = rtCorners[0] * localScaleFac;
         Vector3 max = rtCorners[2] * localScaleFac;
@@ -258,46 +271,12 @@ public class HandTrackingSample : MonoBehaviour
             p1.z += (p0.z - 0.5f) * zScale;
             worldJoints[i] = p1;
         }
-
-        Transform p = rightHand.transform.parent;
-
-        rightHand.transform.SetParent(null);
-        Quaternion q = rightHand.transform.rotation;
-        Vector3 pos = rightHand.transform.position;
-        rightHand.transform.rotation = Quaternion.identity;
-        rightHand.transform.position = Vector3.zero;
-        // sphere joints
-        for (int i = 0; i < HandLandmarkDetect.JOINT_COUNT; i++)
-        {
-            this.rightHand.Joints[i].localPosition = worldJoints[i];
-            //draw.Cube(worldJoints[i], palmPointSize);
-        }
-        // Connection Lines
-        var connections = HandLandmarkDetect.CONNECTIONS;
-        for (int i = 0, n = 0; i < connections.Length; i += 2, n++)
-        {
-            Vector3 wj0 = worldJoints[connections[i]];
-            Vector3 wj1 = worldJoints[connections[i + 1]];
-            rightHand.Bones[n].up = (wj1 - wj0);
-            rightHand.Bones[n].localPosition = wj0;
-            rightHand.Bones[n].localScale = new Vector3(0.001f,Vector3.Distance(wj0, wj1),0.001f);
-            //draw.Line3D(
-            //    worldJoints[connections[i]],
-            //    worldJoints[connections[i + 1]],
-            //    palmLineSize);
-        }
-        // reparent and reset handposition and rotation
-        rightHand.transform.rotation = q;
-        rightHand.transform.position = pos;
-        rightHand.transform.SetParent(p, true);
-        //draw.Apply();
+        rightHand.UpdateJoints(worldJoints);
     }
 
     public void ToggleHorizontal()
     {
         flipHorizontal = !flipHorizontal;
-        Debug.Log("Toggle Horizontal pressed. " + flipHorizontal);
-
     }
 
     public void ToggleVertical()
@@ -313,5 +292,14 @@ public class HandTrackingSample : MonoBehaviour
     public void ToggleWorldSpace()
     {
         worldSpace = !worldSpace;
+    }
+
+    public void UpdateHandScale(SliderEventData eventData)
+    {
+        //Default is 0.000185f
+        // Min is 0.00005f
+        //Max is 0.0005f
+        localScaleFac = 0.00005f + eventData.NewValue * 0.00045f;
+        //sliderZ?.SetText($"{sliderValue:F2}");
     }
 }

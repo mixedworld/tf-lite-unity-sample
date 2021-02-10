@@ -28,7 +28,9 @@ namespace TensorFlowLite
         // regressors / points
         // 0 - 3 are bounding box offset, width and height: dx, dy, w ,h
         // 4 - 17 are 7 hand keypoint x and y coordinates: x1,y1,x2,y2,...x7,y7
+        //private float[,] output1 = new float[2944, 18];
         private float[,] output1 = new float[2944, 18];
+
         private List<Result> results = new List<Result>();
         private SsdAnchor[] anchors;
 
@@ -58,7 +60,7 @@ namespace TensorFlowLite
             };
 
             anchors = SsdAnchorsCalculator.Generate(options);
-            UnityEngine.Debug.AssertFormat(anchors.Length == 2944, "Anchors count must be 2944");
+            UnityEngine.Debug.AssertFormat(anchors.Length == 2944, "Anchors count must be 2944 but is " + anchors.Length);
         }
 
         public override void Invoke(Texture inputTex)
