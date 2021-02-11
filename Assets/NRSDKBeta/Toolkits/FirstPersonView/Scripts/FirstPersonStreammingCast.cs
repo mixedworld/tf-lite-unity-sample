@@ -26,7 +26,9 @@ namespace NRKernal.Beta.StreammingCast
         private NRVideoCapture m_VideoCapture = null;
 
         /// <summary> The server IP. </summary>
-        private string serverIP = "192.168.31.6";
+        //private string serverIP = "192.168.31.6";
+        private string serverIP = "192.168.178.77";
+
 
         /// <summary> Gets the full pathname of the rtp file. </summary>
         /// <value> The full pathname of the rtp file. </value>

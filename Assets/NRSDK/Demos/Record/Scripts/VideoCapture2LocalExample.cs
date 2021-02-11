@@ -27,10 +27,18 @@ namespace NRKernal.NRExamples
         {
             get
             {
-                string timeStamp = Time.time.ToString().Replace(".", "").Replace(":", "");
-                string filename = string.Format("Nreal_Record_{0}.mp4", timeStamp);
-                string filepath = Path.Combine(Application.persistentDataPath, filename);
-                return filepath;
+                if (true)
+                {
+                    return @"rtp://192.168.178.77:42023";
+                }
+                else
+                {
+
+                    string timeStamp = Time.time.ToString().Replace(".", "").Replace(":", "");
+                    string filename = string.Format("Nreal_Record_{0}.mp4", timeStamp);
+                    string filepath = Path.Combine(Application.persistentDataPath, filename);
+                    return filepath;
+                }
             }
         }
 

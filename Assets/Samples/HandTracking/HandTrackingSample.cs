@@ -7,6 +7,7 @@ using TensorFlowLite;
 using Cysharp.Threading.Tasks;
 using MixedWorld.Util;
 using Microsoft.MixedReality.Toolkit.UI;
+using TMPro;
 
 public class HandTrackingSample : MonoBehaviour
 {
@@ -19,6 +20,7 @@ public class HandTrackingSample : MonoBehaviour
     [SerializeField] MWTrackableHand rightHand;
     [SerializeField] RenderTexture targetRT = null;
     [SerializeField] Material EffectsMat = null;
+    [SerializeField] TextMeshPro ScaleInfo = null;
     [SerializeField] bool runBackground;
     [SerializeField] bool isNreal = true;
     [SerializeField] float palmPointSize = 1f;
@@ -27,6 +29,8 @@ public class HandTrackingSample : MonoBehaviour
     [SerializeField] bool flipVertical = false;
     [SerializeField] bool drawFrames = false;
     [SerializeField] bool worldSpace = false;
+    [SerializeField] bool postProcess = true;
+
 
     // Should be something bigger. maybe 0.0004f
     [SerializeField] float localScaleFac = 0.000185f;
@@ -94,7 +98,15 @@ public class HandTrackingSample : MonoBehaviour
     void Update()
     {
 
-        Graphics.Blit(cameraView.texture, targetRT, EffectsMat);
+        if (postProcess)
+        {
+            Graphics.Blit(cameraView.texture, targetRT, EffectsMat);
+        }
+        else
+        {
+            // Flip with the BLIT function
+            Graphics.Blit(cameraView.texture, targetRT, new Vector2(1.0f, -1.0f), new Vector2(0.0f, 1.0f));
+        }
 
         if (runBackground)
         {
@@ -299,7 +311,16 @@ public class HandTrackingSample : MonoBehaviour
         //Default is 0.000185f
         // Min is 0.00005f
         //Max is 0.0005f
+
+        // Optimum
+        //-0.01,-0.13,0.71
+        //Scale 0.000427f
         localScaleFac = 0.00005f + eventData.NewValue * 0.00045f;
-        //sliderZ?.SetText($"{sliderValue:F2}");
+        ScaleInfo?.SetText($"{localScaleFac*10000:F2}");
+    }
+
+    public void TogglePostProcess()
+    {
+        postProcess = !postProcess;
     }
 }
