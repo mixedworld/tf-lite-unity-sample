@@ -32,6 +32,20 @@ namespace MixedWorld.VideoStream
         }
 
         /// <summary>
+        /// Determines if only the camera should be used for hand tracking without encoding it for streaming.
+        /// </summary>
+        public bool CamOnly
+        {
+            get
+            {
+                return camOnly;
+            }
+            set
+            {
+                camOnly = value;
+            }
+        }
+        /// <summary>
         /// Returns the Camera Texture without the virtual screen.
         /// </summary>
         public RenderTexture CameraTexture
@@ -65,7 +79,7 @@ namespace MixedWorld.VideoStream
         [SerializeField] RawImage camTexture = null;
         [SerializeField] RawImage blendTexture = null;
         [SerializeField] GameObject handtracking = null;
-
+        [SerializeField] bool camOnly = false;
 
         [SerializeField] string receiverURL = @"rtp://192.168.178.77:42023";
         /// <summary> The video capture. </summary>
@@ -114,7 +128,7 @@ namespace MixedWorld.VideoStream
                 cameraParameters.pixelFormat = CapturePixelFormat.BGRA32;
                 cameraParameters.blendMode = BlendMode.Blend;
 
-                m_VideoCapture.StartVideoModeAsync(cameraParameters, OnStartedVideoCaptureMode);
+                m_VideoCapture.StartVideoModeAsync(cameraParameters, OnStartedVideoCaptureMode, camOnly);
 
                 camTexture.texture = CameraTexture;
                 blendTexture.texture = BlendTexture;

@@ -91,7 +91,7 @@ namespace NRKernal.Record
             this.m_CaptureBehaviour = this.GetCaptureBehaviourByMode(param.camMode);
             this.m_CameraParameters = param;
             this.m_Encoder = GetEncoderByMode(param.camMode);
-            this.m_Encoder.Config(param);
+            this.m_Encoder?.Config(param);
             this.m_Blender = new FrameBlender();
             this.m_Blender.Init(m_CaptureBehaviour.CaptureCamera, m_Encoder, param);
             this.m_CaptureBehaviour.Init(this, m_Blender);
@@ -146,6 +146,10 @@ namespace NRKernal.Record
             else if (mode == CamMode.VideoMode)
             {
                 return new VideoEncoder();
+            }
+            else if (mode == CamMode.None)
+            {
+                return null;
             }
             else
             {

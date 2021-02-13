@@ -192,7 +192,7 @@ namespace NRKernal.Record
             }
 
             // Commit frame                
-            m_Encoder.Commit(BlendTexture, frame.timeStamp);
+            m_Encoder?.Commit(BlendTexture, frame.timeStamp);
             FrameCount++;
         }
 

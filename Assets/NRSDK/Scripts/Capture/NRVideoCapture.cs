@@ -150,9 +150,16 @@ namespace NRKernal.Record
         /// <summary> Starts video mode asynchronous. </summary>
         /// <param name="setupParams">                Options for controlling the setup.</param>
         /// <param name="onVideoModeStartedCallback"> The on video mode started callback.</param>
-        public void StartVideoModeAsync(CameraParameters setupParams, OnVideoModeStartedCallback onVideoModeStartedCallback)
+        public void StartVideoModeAsync(CameraParameters setupParams, OnVideoModeStartedCallback onVideoModeStartedCallback, bool noEncoding = false)
         {
-            setupParams.camMode = CamMode.VideoMode;
+            if (noEncoding)
+            {
+                setupParams.camMode = CamMode.None;
+            }
+            else
+            {
+                setupParams.camMode = CamMode.VideoMode;
+            }
             setupParams.hologramOpacity = 1;
             m_CaptureContext.StartCaptureMode(setupParams);
             var result = new VideoCaptureResult();
