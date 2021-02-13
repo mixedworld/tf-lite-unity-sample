@@ -67,6 +67,13 @@ namespace NRKernal.Record
             }
         }
 
+        public Texture2D FrameTexture
+        {
+            get
+            {
+                return m_RGBOrigin;
+            }
+        }
         /// <summary> Gets the virtual texture. </summary>
         /// <value> The virtual texture. </value>
         public RenderTexture VirtualTexture
@@ -134,6 +141,7 @@ namespace NRKernal.Record
                 case BlendMode.Blend:
                     blendshader = Resources.Load<Shader>("Record/Shaders/AlphaBlend");
                     m_BlendMaterial = new Material(blendshader);
+                    m_RGBSource = new RenderTexture(Width, Height, 24, RenderTextureFormat.ARGB32);
                     BlendTexture = new RenderTexture(Width, Height, 24, RenderTextureFormat.ARGB32);
                     break;
                 case BlendMode.WidescreenBlend:
@@ -172,6 +180,8 @@ namespace NRKernal.Record
                 case BlendMode.Blend:
                     m_BlendMaterial.SetTexture("_MainTex", m_TargetCamera.targetTexture);
                     m_BlendMaterial.SetTexture("_BcakGroundTex", frame.texture);
+                    // Just copy the camera texture to the RenderTexture and flip it vertically.
+                    Graphics.Blit(frame.texture, m_RGBSource, new Vector2(1.0f, -1.0f), new Vector2(0.0f, 1.0f));
                     Graphics.Blit(m_TargetCamera.targetTexture, BlendTexture, m_BlendMaterial);
                     break;
                 case BlendMode.WidescreenBlend:

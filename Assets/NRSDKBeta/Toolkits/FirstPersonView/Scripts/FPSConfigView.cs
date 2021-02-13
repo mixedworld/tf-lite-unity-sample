@@ -16,6 +16,7 @@ namespace NRKernal.Beta.StreammingCast
     /// <summary> The FPS configuration view. </summary>
     public class FPSConfigView : MonoBehaviour
     {
+
         /// <summary> The cache server IP key. </summary>
         private const string CacheServerIPKey = "FPSServerIP";
         /// <summary> The on click start. </summary>
@@ -24,6 +25,10 @@ namespace NRKernal.Beta.StreammingCast
         public Action OnClickStop;
         /// <summary> The IP address. </summary>
         public InputField m_IPAddress;
+        /// <summary>
+        /// The default Server IP Address with port.
+        /// </summary>
+        [SerializeField] string defaultServer = @"rtp://192.168.178.77:42023";
         /// <summary> The start button. </summary>
         public Button m_StartBtn;
         /// <summary> The stop control. </summary>
@@ -37,7 +42,12 @@ namespace NRKernal.Beta.StreammingCast
         void Start()
         {
             m_IPAddress.text = PlayerPrefs.GetString(CacheServerIPKey);
-
+            Debug.Log("IP ADDRESS: " + m_IPAddress.text);
+            if (m_IPAddress.text == "")
+            {
+                m_IPAddress.text = defaultServer;
+            }
+            m_IPAddress.onValueChanged.Invoke(m_IPAddress.text);
             m_StartBtn.onClick.AddListener(() =>
             {
                 PlayerPrefs.SetString(CacheServerIPKey, m_IPAddress.text);

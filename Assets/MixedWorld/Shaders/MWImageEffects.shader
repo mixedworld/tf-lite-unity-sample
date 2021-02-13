@@ -7,6 +7,7 @@
 		_Brightness("Brightness", Range(-1, 1)) = 0.
 		_Contrast("Contrast", Range(0, 2)) = 1
 		_Saturation("Saturation", Range(0, 2)) = 1
+		_FlipV("Flip Vertically", Float) = 0
 	}
 		SubShader
 		{
@@ -35,6 +36,8 @@
 				float _Brightness;
 				float _Contrast;
 				float _Saturation;
+				float _FlipV;
+
 				v2f vert(appdata v)
 				{
 					v2f o;
@@ -63,8 +66,10 @@
 				fixed4 frag(v2f i) : SV_Target
 				{
 					float2 flippedUVs = i.uv;
-					flippedUVs.x = flippedUVs.x;
-					flippedUVs.y = 1.0 - flippedUVs.y;
+					if (_FlipV > 0) {
+						flippedUVs.x = flippedUVs.x;
+						flippedUVs.y = 1.0 - flippedUVs.y;
+					}
 					float4 startColor = tex2D(_MainTex, flippedUVs);
 					float4 hsbColor = applyHSBEffect(startColor);
 					return hsbColor;

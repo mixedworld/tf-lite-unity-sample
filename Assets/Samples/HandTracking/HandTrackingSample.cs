@@ -8,6 +8,7 @@ using Cysharp.Threading.Tasks;
 using MixedWorld.Util;
 using Microsoft.MixedReality.Toolkit.UI;
 using TMPro;
+using MixedWorld.VideoStream;
 
 public class HandTrackingSample : MonoBehaviour
 {
@@ -33,7 +34,7 @@ public class HandTrackingSample : MonoBehaviour
 
 
     // Should be something bigger. maybe 0.0004f
-    [SerializeField] float localScaleFac = 0.000185f;
+    [SerializeField] float localScaleFac = 0.000404f;
 
 
     WebCamTexture webcamTexture;
@@ -104,8 +105,9 @@ public class HandTrackingSample : MonoBehaviour
         }
         else
         {
-            // Flip with the BLIT function
-            Graphics.Blit(cameraView.texture, targetRT, new Vector2(1.0f, -1.0f), new Vector2(0.0f, 1.0f));
+            // Texture is already flipped now so we can just assign it
+            targetRT = (RenderTexture)cameraView.texture;
+            //Graphics.Blit(cameraView.texture, targetRT, new Vector2(1.0f, -1.0f), new Vector2(0.0f, 1.0f));
         }
 
         if (runBackground)
@@ -313,8 +315,9 @@ public class HandTrackingSample : MonoBehaviour
         //Max is 0.0005f
 
         // Optimum
-        //-0.01,-0.13,0.71
-        //Scale 0.000427f
+        //0.0,-0.24,0.69
+        //Scale 4.04
+        //Scale 0.000404f is a slider value of 0.786667f
         localScaleFac = 0.00005f + eventData.NewValue * 0.00045f;
         ScaleInfo?.SetText($"{localScaleFac*10000:F2}");
     }
