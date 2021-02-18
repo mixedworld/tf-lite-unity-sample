@@ -13,6 +13,16 @@ namespace TensorFlowLite
         {
             public float score;
             public Vector3[] joints;
+
+            public static Result Copy(Result original)
+            {
+                var theCopy = new Result()
+                {
+                    score = original.score,
+                    joints = (Vector3[])original.joints.Clone()
+                };
+                return theCopy;
+            }
         }
 
         public enum Dimension
@@ -127,16 +137,20 @@ namespace TensorFlowLite
 
         public Result GetResult()
         {
+            var resulT = new Result()
+            {
+                score = 0,
+                joints = new Vector3[JOINT_COUNT],
+            };
             // Normalize 0 ~ 255 => 0.0 ~ 1.0
             const float SCALE = 1f / 255f;
             var mtx = cropMatrix.inverse;
-
-            result.score = output1[0];
+            resulT.score = output1[0];
             if (Dim == Dimension.TWO)
             {
                 for (int i = 0; i < JOINT_COUNT; i++)
                 {
-                    result.joints[i] = mtx.MultiplyPoint3x4(new Vector3(
+                    resulT.joints[i] = mtx.MultiplyPoint3x4(new Vector3(
                         output0[i * 2] * SCALE,
                         1f - output0[i * 2 + 1] * SCALE,
                         0
@@ -147,14 +161,14 @@ namespace TensorFlowLite
             {
                 for (int i = 0; i < JOINT_COUNT; i++)
                 {
-                    result.joints[i] = mtx.MultiplyPoint3x4(new Vector3(
+                    resulT.joints[i] = mtx.MultiplyPoint3x4(new Vector3(
                         output0[i * 3] * SCALE,
                         1f - output0[i * 3 + 1] * SCALE,
                         output0[i * 3 + 2] * SCALE
                     ));
                 }
             }
-            return result;
+            return resulT;
         }
 
         private static float CalcHandRotation(ref PalmDetect.Result detection)
