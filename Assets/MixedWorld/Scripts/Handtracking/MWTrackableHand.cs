@@ -12,9 +12,19 @@ public class MWTrackableHand : MonoBehaviour
         public float smoothSpeed = 10f;
         public bool isLeft = false;
         public bool isTracked = true;
-        
+        public bool isDirty = false;
+
         private float lastTracked = 0f;
         private bool hidden = false;
+
+        private Vector3[] m_joints = new Vector3[21];
+        public Vector3[] SharedJoints
+        {
+            get
+            {
+                return m_joints;
+            }
+        }
 
         private Vector3 lastKnownPos = Vector3.zero;
 
@@ -65,8 +75,9 @@ public class MWTrackableHand : MonoBehaviour
                 j.gameObject.SetActive(!hide);
             }
         }
-        public void UpdateJoints(Vector3[] jointPos)
+        public void UpdateJoints(Vector3[] jointPos, bool fromRemote = false)
         {
+            
             lastKnownPos = jointPos[0];
             isTracked = true;
 
@@ -81,6 +92,7 @@ public class MWTrackableHand : MonoBehaviour
             float smoothDelta = Time.deltaTime * smoothSpeed;
             for (int i = 0; i < jointPos.Length; i++)
             {
+                m_joints[i] = jointPos[i];
                 Joints[i].localPosition = Vector3.Lerp(Joints[i].localPosition, jointPos[i], smoothDelta);
             }
             // Connection Bones
@@ -92,6 +104,7 @@ public class MWTrackableHand : MonoBehaviour
             transform.rotation = q;
             transform.position = pos;
             transform.SetParent(p, true);
+            this.isDirty = !fromRemote;
         }
 
         public float DistToNewPos(Vector3 newPos)

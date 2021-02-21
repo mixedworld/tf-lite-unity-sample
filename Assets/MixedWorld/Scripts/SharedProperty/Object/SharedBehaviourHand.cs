@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using MixedWorld.Sharing;
+using MixedWorld.Util;
 
 public class HandJoints : SharedPropertyBase
 {
@@ -13,7 +14,7 @@ public class HandJoints : SharedPropertyBase
         joints = new Vector3[21];
     }
 
-    public Vector3[] JointSpring
+    public Vector3[] Joints
     {
         get { return joints; }
         set { joints = value; }
@@ -23,7 +24,7 @@ public class HandJoints : SharedPropertyBase
 [RequireComponent(typeof(ObjectIdentifier))]
 public class SharedBehaviourHand : MonoBehaviour
 {
-   
+    public MWTrackableHand hand = null;
     public SenderRecieverSharedMode sharedMode = SenderRecieverSharedMode.Both;
 
     private SharedPropertyManager<HandJoints> sharedJoints;
@@ -41,8 +42,10 @@ public class SharedBehaviourHand : MonoBehaviour
         Debug.LogFormat("Property changed by {0}", name);
 
         //copy to sensor
-        //Vector3[] { .... } = sharedJoints.Value.JointSpring;
-
+        if (hand != null)
+        {
+            hand.UpdateJoints(sharedJoints.Value.Joints, true);
+        }
     }
     private void OnEnable()
     {
@@ -81,10 +84,11 @@ public class SharedBehaviourHand : MonoBehaviour
         }
         sharedJoints.sharedMode = sharedMode;
 
-        //if (...) new hand position from local to sensor
+        
+        if(hand != null && hand.isDirty)
         {
-            //sharedJoints.Value.JointSpring = new Vector3[] { .... };
-            //sharedJoints.StatusFlag = Variable_Status.Dirty;
+            sharedJoints.Value.Joints = hand.SharedJoints;
+            sharedJoints.StatusFlag = Variable_Status.Dirty;
         }
         sharedJoints.Update();
 
