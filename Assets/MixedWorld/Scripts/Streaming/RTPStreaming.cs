@@ -13,6 +13,7 @@ namespace MixedWorld.Streaming
     using System;
     using System.IO;
     using UnityEngine.UI;
+    using NRKernal;
 
     /// <summary> Streaming Controller to Stream Nreal View including MR Scene over RTP </summary>
     public class RTPStreaming : MonoBehaviour
@@ -38,11 +39,55 @@ namespace MixedWorld.Streaming
         private NRVideoCapture m_VideoCapture = null;
 
         /// <summary> The RTP server IP. </summary>
-        private string rtpServerIP = "192.168.178.77";
+        private string rtpServerIP = "highfive"; //"192.168.178.77";
 
         /// <summary> The RTP default Port. /// </summary>
         private string rtpPort = "1042";
 
+        /// <summary>
+        /// Determines if only the camera should be used for hand tracking without encoding it for streaming.
+        /// </summary>
+        public bool CamOnly
+        {
+            get
+            {
+                return camOnly;
+            }
+            set
+            {
+                camOnly = value;
+            }
+        }
+        /// <summary>
+        /// Returns the Camera Texture without the virtual screen.
+        /// </summary>
+        public RenderTexture CameraTexture
+        {
+            get
+            {
+                return m_VideoCapture?.GetContext()?.GetBlender().RGBTexture;
+            }
+        }
+        /// <summary>
+        /// Returns the Virtual Texture with Scene content but without Camera.
+        /// </summary>
+        public RenderTexture VirtualTexture
+        {
+            get
+            {
+                return m_VideoCapture?.GetContext()?.GetBlender().VirtualTexture;
+            }
+        }
+        /// <summary>
+        /// Returns the Blended Texture containing Camera and Scene content.
+        /// </summary>
+        public RenderTexture BlendTexture
+        {
+            get
+            {
+                return m_VideoCapture?.GetContext()?.GetBlender().BlendTexture;
+            }
+        }
         /// <summary> Returns the RTP Path including Protocoll, IP and Port. OR if it is a filename will save to disk. </summary>
         /// <value> The RTP IP Address. </value>
         public string RTPPath
@@ -99,7 +144,23 @@ namespace MixedWorld.Streaming
                 StopVideoCapture();
             };
 
+            CreateVideoCaptureTest();
             m_IsInitialized = true;
+        }
+
+        void CreateVideoCaptureTest()
+        {
+            NRVideoCapture.CreateAsync(false, delegate (NRVideoCapture videoCapture)
+            {
+                if (videoCapture != null)
+                {
+                    m_VideoCapture = videoCapture;
+                }
+                else
+                {
+                    NRDebugger.Error("Failed to create VideoCapture Instance!");
+                }
+            });
         }
 
         /// <summary> Starts the video capture and rtp streaming. </summary>
@@ -160,6 +221,12 @@ namespace MixedWorld.Streaming
                 cameraParameters.blendMode = BlendMode.Blend;
 
                 m_VideoCapture.StartVideoModeAsync(cameraParameters, OnStartedVideoCaptureMode);
+                if (m_cameraImage != null)
+                    m_cameraImage.texture = CameraTexture;
+                if (m_previewImage != null)
+                 m_previewImage.texture = BlendTexture;
+
+                m_handtracking?.SetActive(true);
             }
         }
 
@@ -173,14 +240,6 @@ namespace MixedWorld.Streaming
         /// <param name="result"> The result.</param>
         void OnStartedVideoCaptureMode(NRVideoCapture.VideoCaptureResult result)
         {
-            if (m_previewImage != null)
-            {
-                m_previewImage.texture = m_VideoCapture.PreviewTexture;
-            }
-            if (m_handtracking != null)
-            {
-                m_handtracking.SetActive(true);
-            }
             m_VideoCapture.StartRecordingAsync(RTPPath, OnStartedRecordingVideo, camOnly);
         }
 

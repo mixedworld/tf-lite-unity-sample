@@ -44,7 +44,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/MixedWorld/HandTrackingTest.unity
     guid: 4721f7a0888ade64e89d2d6565833e79
-  - enabled: 1
+  - enabled: 0
     path: Assets/MixedWorld/MRTKHandTracking.unity
     guid: e87494bc839842141acffd75eac3f788
   - enabled: 0
@@ -53,7 +53,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/NRSDK/Demos/RGBCamera-Record.unity
     guid: 372f49325786d554ea3a2306e1178303
-  - enabled: 0
+  - enabled: 1
     path: Assets/MixedWorld/Scenes/MRTKHandTrackingTest.unity
     guid: 4e51396f55e3c1f42a4ce9064232e47a
   m_configObjects: {}
