@@ -164,13 +164,16 @@ namespace NRKernal.Record
         }
 
         /// <summary> Starts a capture. </summary>
-        public void StartCapture()
+        public void StartCapture(bool camOnly = false)
         {
             if (!m_IsInit)
             {
                 return;
             }
-            m_Encoder?.Start();
+            if (camOnly)
+            {
+                m_Encoder?.Start();
+            }
             m_FrameProvider?.Play();
         }
 

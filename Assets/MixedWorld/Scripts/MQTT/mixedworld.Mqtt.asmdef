@@ -1,0 +1,16 @@
+{
+    "name": "mixedworld.Mqtt",
+    "references": [
+        "mixedworld.Utility",
+        "mixedworld.Logging"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": []
+}

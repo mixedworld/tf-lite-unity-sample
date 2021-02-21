@@ -24,7 +24,7 @@ EditorBuildSettings:
     path: Assets/Samples/StyleTransfer/StyleTransfer.unity
     guid: 494656ebdd6dc43b4843586753a539bb
   - enabled: 0
-    path: Assets/Samples/HandTracking/HandTracking.unity
+    path: Assets/MixedWorld/Scripts/Handtracking/HandTracking.unity
     guid: 662ce65fb2adc439e84fa9fc8d766fe4
   - enabled: 0
     path: Assets/Samples/BlazePose/BlazePoseUpperBody.unity
@@ -53,4 +53,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/NRSDK/Demos/RGBCamera-Record.unity
     guid: 372f49325786d554ea3a2306e1178303
+  - enabled: 0
+    path: Assets/MixedWorld/Scenes/MRTKHandTrackingTest.unity
+    guid: 4e51396f55e3c1f42a4ce9064232e47a
   m_configObjects: {}

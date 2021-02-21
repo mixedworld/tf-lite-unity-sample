@@ -64,6 +64,13 @@ namespace Microsoft.MixedReality.Toolkit.Physics
         private Vector3 targetPosition;
 
         /// <summary>
+        /// If animating position, specifies the target position as specified
+        /// by SetTargetLocalPosition. Otherwise returns the current position of
+        /// the transform.
+        /// </summary>
+        public Vector3 TargetLocalPosition => AnimatingPosition ? targetLocalPosition : transform.localPosition;
+        private Vector3 targetLocalPosition;
+        /// <summary>
         /// If animating rotation, specifies the target rotation as specified
         /// by SetTargetRotation. Otherwise returns the current rotation of
         /// the transform.
@@ -299,7 +306,35 @@ namespace Microsoft.MixedReality.Toolkit.Physics
                 AnimatingPosition = false;
             }
         }
+        /// <summary>
+        /// Sets the target position for the transform and if position wasn't
+        /// already animating, fires the InterpolationStarted event.
+        /// </summary>
+        /// <param name="target">The new target position to for the transform.</param>
+        public void SetTargetLocalPosition(Vector3 target)
+        {
+            bool wasRunning = Running;
 
+            targetLocalPosition = target;
+
+            float magsq = (targetLocalPosition - transform.localPosition).sqrMagnitude;
+            if (magsq > Tolerance)
+            {
+                AnimatingPosition = true;
+                enabled = true;
+
+                if (InterpolationStarted != null && !wasRunning)
+                {
+                    InterpolationStarted();
+                }
+            }
+            else
+            {
+                // Set immediately to prevent accumulation of error.
+                transform.localPosition = target;
+                AnimatingPosition = false;
+            }
+        }
         /// <summary>
         /// Sets the target rotation for the transform and if rotation wasn't
         /// already animating, fires the InterpolationStarted event.
