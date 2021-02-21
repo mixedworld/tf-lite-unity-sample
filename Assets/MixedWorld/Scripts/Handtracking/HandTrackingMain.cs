@@ -108,7 +108,7 @@ namespace MixedWorld.Handtracking
 
         void Update()
         {
-            if (!isReady) return;
+            if (!isReady || targetRT == null) return;
             if (postProcess)
             {
                 Graphics.Blit(cameraView.texture, targetRT, EffectsMat);
