@@ -22,6 +22,7 @@ public class HandTrackingSample : MonoBehaviour
     [SerializeField] MWTrackableHand leftHand;
     [SerializeField] RenderTexture targetRT = null;
     [SerializeField] Material EffectsMat = null;
+    [SerializeField] Material NoEffectsMat = null;
     [SerializeField] TextMeshPro ScaleInfo = null;
     [SerializeField] bool runBackground;
     [SerializeField] bool isNreal = true;
@@ -111,8 +112,8 @@ public class HandTrackingSample : MonoBehaviour
         }
         else
         {
-            // Texture is already flipped now so we can just assign it
-            targetRT = (RenderTexture)cameraView.texture;
+            Graphics.Blit(cameraView.texture, targetRT, NoEffectsMat);
+
             //Graphics.Blit(cameraView.texture, targetRT, new Vector2(1.0f, -1.0f), new Vector2(0.0f, 1.0f));
         }
 
@@ -216,7 +217,6 @@ public class HandTrackingSample : MonoBehaviour
             landmarkResultF = landmarkDetect.GetResult();
         }
         debugPalmView.texture = landmarkDetect.inputTex;
-
     }
 
     async UniTask<bool> InvokeAsync()
