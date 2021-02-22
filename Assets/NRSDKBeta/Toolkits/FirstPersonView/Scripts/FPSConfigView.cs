@@ -18,7 +18,7 @@ namespace NRKernal.Beta.StreammingCast
     {
 
         /// <summary> The cache server IP key. </summary>
-        private const string CacheServerIPKey = "FPSServerIP";
+        private const string CacheServerIPKey = "MWServerIP";
         /// <summary> The on click start. </summary>
         public Action<string> OnClickStart;
         /// <summary> The on click stop. </summary>
@@ -28,7 +28,7 @@ namespace NRKernal.Beta.StreammingCast
         /// <summary>
         /// The default Server IP Address with port.
         /// </summary>
-        [SerializeField] string defaultServer = @"rtp://192.168.178.77:42023";
+        [SerializeField] string defaultServer = @"mghighfive";
         /// <summary> The start button. </summary>
         public Button m_StartBtn;
         /// <summary> The stop control. </summary>

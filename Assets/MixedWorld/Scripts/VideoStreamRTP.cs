@@ -8,6 +8,7 @@
 
 using NRKernal;
 using NRKernal.Record;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,18 +17,39 @@ namespace MixedWorld.VideoStream
 {
     public class VideoStreamRTP : MonoBehaviour
     {
-        
-        /// <summary> The Streaming URL - where to stream to. </summary>
-        /// <value> Streaming URL starting with protocol rtp </value>
+
+        /// <summary> The RTP default Port. /// </summary>
+        private string rtpPort = "1042";
+
+        /// <summary> Returns the RTP Path including Protocoll, IP and Port. OR if it is a filename will save to disk. </summary>
+        /// <value> The RTP IP Address. </value>
         public string ReceiverURL
         {
-            get
-            {
-                return receiverURL;
-            }
             set
             {
                 receiverURL = value;
+            }
+            get
+            {
+                if (receiverURL.Split('.').Length == 4)
+                {
+                    if (receiverURL.Split(':').Length == 2)
+                    {
+                        return string.Format(@"rtp://{0}", receiverURL);
+                    }
+                    else
+                    {
+                        return string.Format(@"rtp://{0}:{1}", receiverURL, rtpPort);
+                    }
+                }
+                else
+                {
+                    // Saving to local filepath
+                    string timeStamp = Time.time.ToString().Replace(".", "").Replace(":", "");
+                    string filename = string.Format("{0}_{1}.mp4", receiverURL, timeStamp);
+                    string filepath = Path.Combine(Application.persistentDataPath, filename);
+                    return filepath;
+                }
             }
         }
 
@@ -81,7 +103,7 @@ namespace MixedWorld.VideoStream
         [SerializeField] GameObject handtracking = null;
         [SerializeField] bool camOnly = false;
 
-        [SerializeField] string receiverURL = @"rtp://192.168.178.77:42023";
+        [SerializeField] string receiverURL = @"mwhighfive";
         /// <summary> The video capture. </summary>
         NRVideoCapture m_VideoCapture = null;
 
