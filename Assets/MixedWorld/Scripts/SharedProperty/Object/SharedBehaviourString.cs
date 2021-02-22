@@ -36,6 +36,7 @@ namespace MixedWorld.Sharing
             prefabType.OnSharedPropertyUpdate += OnMqttMessageReceived;
             prefabType.Value = new PrefabType();
             prefabType.Value.name = prefabName;
+            prefabType.StatusFlag = Variable_Status.Dirty;
 
         }
 
@@ -50,8 +51,8 @@ namespace MixedWorld.Sharing
             {
                 prefabType.Value.name = prefabName;
                 prefabType.StatusFlag = Variable_Status.Dirty;
-                prefabType.Update();
             }
+            prefabType.Update();
         }
 
         public void OnMqttMessageReceived(object sender, SampleEventArgs e)
