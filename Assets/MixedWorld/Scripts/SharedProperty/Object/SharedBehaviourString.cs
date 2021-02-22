@@ -46,8 +46,12 @@ namespace MixedWorld.Sharing
                 return;
             }
 
-            prefabType.Value.name = prefabName;
-            prefabType.Update();
+            if (prefabType.Value.name != prefabName)
+            {
+                prefabType.Value.name = prefabName;
+                prefabType.StatusFlag = Variable_Status.Dirty;
+                prefabType.Update();
+            }
         }
 
         public void OnMqttMessageReceived(object sender, SampleEventArgs e)
