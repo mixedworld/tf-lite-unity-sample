@@ -92,10 +92,9 @@ public class SharedBehaviourHand : MonoBehaviour
 
         if (hand != null && hand.isDirty)
         {
-            Vector3[] vec = hand.SharedJoints;
             for (int i = 0; i < 21; i++)
             {
-                sharedJoints.Value.Joints[i].setVector3(vec[i]);
+                sharedJoints.Value.Joints[i].setVector3(hand.SharedJoints[i]);
             }
             hand.isDirty = false;
             sharedJoints.StatusFlag = Variable_Status.Dirty;
