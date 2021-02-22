@@ -35203,7 +35203,7 @@ MonoBehaviour:
   EffectsMat: {fileID: 2100000, guid: 92f07391ed23ca44dbb66cb29ca47ef5, type: 2}
   NoEffectsMat: {fileID: 2100000, guid: 6f318a6f5005da842816443a77591c71, type: 2}
   ScaleInfo: {fileID: 226335349}
-  runBackground: 0
+  runBackground: 1
   isNreal: 1
   palmPointSize: 0.005
   palmLineSize: 0.002
@@ -35211,9 +35211,9 @@ MonoBehaviour:
   flipVertical: 0
   drawFrames: 0
   worldSpace: 0
-  postProcess: 0
+  postProcess: 1
   twoHands: 0
-  localScaleFac: 0.000427
+  localScaleFac: 0.000404
 --- !u!1 &1456262915
 GameObject:
   m_ObjectHideFlags: 0
@@ -39894,20 +39894,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1666569904}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1666569915
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1666569907}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a98de877dee5fc341b4eb59dfdab266c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  autoConstraintSelection: 1
-  selectedConstraints: []
 --- !u!114 &1666569917
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -39934,7 +39920,7 @@ MonoBehaviour:
   rotateLerpTime: 0.000001
   scaleLerpTime: 0.000001
   enableConstraints: 1
-  constraintsManager: {fileID: 1666569915}
+  constraintsManager: {fileID: 1666569918}
   elasticsManager: {fileID: 0}
   onManipulationStarted:
     m_PersistentCalls:
@@ -39972,6 +39958,20 @@ MonoBehaviour:
   onHoverExited:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1666569918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1666569907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a98de877dee5fc341b4eb59dfdab266c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  autoConstraintSelection: 1
+  selectedConstraints: []
 --- !u!1001 &1672675963
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -40856,7 +40856,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1698852959}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.067, y: 0.171, z: 0.9871897}
+  m_LocalPosition: {x: 0.067, y: 0.078, z: 0.9871897}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1592761515}
