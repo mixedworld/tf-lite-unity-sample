@@ -327,7 +327,7 @@ public class SharedPropertyManager<T> : ConnectionBase
         {
             ContractResolver = new CamelCasePropertyNamesContractResolver(),
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-            Formatting = Formatting.Indented
+            Formatting = Formatting.None
         };
         settings.Converters.Add(new StringEnumConverter());
         var jsonValue = JsonConvert.SerializeObject(Value, settings);
