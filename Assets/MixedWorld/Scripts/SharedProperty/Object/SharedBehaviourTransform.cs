@@ -9,12 +9,57 @@ using UnityEngine;
 namespace MixedWorld.Sharing
 {
 
-public class SharedTransformData : SharedPropertyBase
-{
-    public Vector3 localPosition;
-    public Quaternion localRotation;
-    public Vector3 localScale;
-}
+    public class V
+    {
+        private Vector3 v;
+        public float x, y, z;
+        public V()
+        {
+            v = new Vector3(x, y, z);
+        }
+
+        public Vector3 getVector3()
+        {
+            return new Vector3(x, y, z);
+        }
+
+        public void setVector3(Vector3 vec)
+        {
+            x = vec.x;
+            y = vec.y;
+            z = vec.z;
+        }
+    }
+
+    public class Q
+    {
+        private Quaternion q;
+        public float x, y, z, w;
+        public Q()
+        {
+            q = new Quaternion(x, y, z, w);
+        }
+
+        public Quaternion getQuaternion()
+        {
+            return new Quaternion(x, y, z, w);
+        }
+
+        public void setQuaternion(Quaternion quat)
+        {
+            x = quat.x;
+            y = quat.y;
+            z = quat.z;
+            w = quat.w;
+        }
+    }
+
+    public class SharedTransformData : SharedPropertyBase
+    {
+        public V p; //localposition
+        public Q r; //localrotate
+        public V s; //localscale
+    }
 
     [RequireComponent(typeof(ObjectIdentifier))]
     [DisallowMultipleComponent]
@@ -35,8 +80,9 @@ public class SharedTransformData : SharedPropertyBase
         private bool isSomeThingHappendWithMe = false;
 
         private bool isBeingManipulated = false;
-    
-        public SenderRecieverSharedMode SharedMode {
+
+        public SenderRecieverSharedMode SharedMode
+        {
             get { return transformData.sharedMode; }
             set
             {
@@ -62,17 +108,17 @@ public class SharedTransformData : SharedPropertyBase
         {
             yield return new WaitForEndOfFrame();
             Debug.LogFormat("Property changed by {0}", name);
-        
+
             isSomeThingHappendWithMe = true;
 
             // update the placement to match the user's gaze.
-            interpolator.SetTargetLocalPosition(transformData.Value.localPosition);
+            interpolator.SetTargetLocalPosition(transformData.Value.p.getVector3());
 
             // Rotate this object to face the user.
-            interpolator.SetTargetLocalRotation(transformData.Value.localRotation);
+            interpolator.SetTargetLocalRotation(transformData.Value.r.getQuaternion());
 
             // Update objects local Scale.
-            interpolator.SetTargetLocalScale(transformData.Value.localScale);
+            interpolator.SetTargetLocalScale(transformData.Value.s.getVector3());
         }
 
 
@@ -85,24 +131,24 @@ public class SharedTransformData : SharedPropertyBase
             objectIdentifier = EnsureObjectIdentifier();
             interpolator = EnsureInterpolator();
 
-            yield return new WaitUntil(()=> { return objectIdentifier.isInitialized; });
+            yield return new WaitUntil(() => { return objectIdentifier.isInitialized; });
             if (rootToTransmit == null)
             {
                 rootToTransmit = this.transform;
             }
             transformData = new SharedPropertyManager<SharedTransformData>(objectIdentifier.rootId, objectIdentifier.ObjectId, this.GetType().Name, nameof(transformData));
             transformData.sharedMode = sharedMode;
-            
+
 
             transformData.Value = new SharedTransformData();
 
-            transformData.Value.localPosition = new Vector3();
-            transformData.Value.localRotation = new Quaternion();
-            transformData.Value.localScale = new Vector3();
+            transformData.Value.p = new V();
+            transformData.Value.r = new Q();
+            transformData.Value.s = new V();
 
-            transformData.Value.localPosition = rootToTransmit.localPosition;
-            transformData.Value.localRotation = rootToTransmit.localRotation;
-            transformData.Value.localScale = rootToTransmit.localScale;
+            transformData.Value.p.setVector3(rootToTransmit.localPosition);
+            transformData.Value.r.setQuaternion(rootToTransmit.localRotation);
+            transformData.Value.s.setVector3(rootToTransmit.localScale);
             isBeingManipulated = false;
 
             transformData.OnSharedPropertyUpdate += OnObjectChanged;
@@ -124,9 +170,9 @@ public class SharedTransformData : SharedPropertyBase
                 /// just send status
                 /// 
 
-                transformData.Value.localPosition = interpolator.TargetLocalPosition;
-                transformData.Value.localRotation = interpolator.TargetLocalRotation;
-                transformData.Value.localScale = interpolator.TargetLocalScale;
+                transformData.Value.p.setVector3(interpolator.TargetLocalPosition);
+                transformData.Value.r.setQuaternion(interpolator.TargetLocalRotation);
+                transformData.Value.s.setVector3(interpolator.TargetLocalScale);
 
                 transformData.StatusFlag = Variable_Status.Dirty;
 
@@ -135,29 +181,29 @@ public class SharedTransformData : SharedPropertyBase
 
             }
 
-            else if (transformData.Value.localPosition != rootToTransmit.localPosition || transformData.Value.localRotation != rootToTransmit.localRotation || transformData.Value.localScale != rootToTransmit.localScale)
+            else if (transformData.Value.p.getVector3() != rootToTransmit.localPosition || transformData.Value.r.getQuaternion() != rootToTransmit.localRotation || transformData.Value.s.getVector3() != rootToTransmit.localScale)
             {
                 if (interpolator.Running)
                 {
                     // this is an action of my own
                     //Debug.Log("interpolation is detected");
                     // update the placement to match the user's gaze.
-                    interpolator.SetTargetPosition(transformData.Value.localPosition);
+                    interpolator.SetTargetPosition(transformData.Value.p.getVector3());
 
                     // Rotate this object to face the user.
-                    interpolator.SetTargetRotation(transformData.Value.localRotation);
+                    interpolator.SetTargetRotation(transformData.Value.r.getQuaternion());
                     //rb.isKinematic = true;
 
-                    interpolator.SetTargetLocalScale(transformData.Value.localScale);
+                    interpolator.SetTargetLocalScale(transformData.Value.s.getVector3());
                 }
                 else
                 {
                     //this is usually sends by an editor
                     Debug.Log("editor movment is detected");
                     interpolator.Reset();
-                    transformData.Value.localPosition = rootToTransmit.localPosition;
-                    transformData.Value.localRotation = rootToTransmit.localRotation;
-                    transformData.Value.localScale = rootToTransmit.localScale;
+                    transformData.Value.p.setVector3(rootToTransmit.localPosition);
+                    transformData.Value.r.setQuaternion(rootToTransmit.localRotation);
+                    transformData.Value.s.setVector3(rootToTransmit.localScale);
 
                     transformData.StatusFlag = Variable_Status.Dirty;
                 }
@@ -202,7 +248,7 @@ public class SharedTransformData : SharedPropertyBase
         }
         private void OnDisable()
         {
-           // objectDNA?.RemoveComponentItem(this.GetType().Name);
+            // objectDNA?.RemoveComponentItem(this.GetType().Name);
 
             this.gameObject.GetComponent<ManipulationHandler>()?.OnManipulationStarted.RemoveListener(OnManipulationStarted);
             this.gameObject.GetComponent<ManipulationHandler>()?.OnManipulationEnded.RemoveListener(OnManipulationEnded);
