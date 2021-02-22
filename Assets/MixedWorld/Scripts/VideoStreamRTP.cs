@@ -103,7 +103,7 @@ namespace MixedWorld.VideoStream
         [SerializeField] GameObject handtracking = null;
         [SerializeField] bool camOnly = false;
 
-        [SerializeField] string receiverURL = @"mwhighfive";
+        public string receiverURL = @"mwhighfive";
         /// <summary> The video capture. </summary>
         NRVideoCapture m_VideoCapture = null;
 

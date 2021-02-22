@@ -12,6 +12,8 @@ namespace MixedWorld.Util
         [SerializeField] TextMeshPro info;
         [SerializeField] TextMeshPro sliderZ;
         [SerializeField] float sliderOffset = 1f;
+        [SerializeField] bool dontUpdate = false;
+
 
         [SerializeField] bool movx = true, movy = true;
         [SerializeField] bool rotX = true, rotY = true, rotZ = true;
@@ -30,6 +32,7 @@ namespace MixedWorld.Util
         // Update is called once per frame
         void Update()
         {
+            if (dontUpdate) return;
             if (transform.hasChanged)
             {
                 //transform.hasChanged = false;
