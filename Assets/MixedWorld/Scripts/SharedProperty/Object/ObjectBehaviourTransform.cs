@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using MixedWorld.Sharing;
 
-public class TransformData : SharedPropertyBase
+public class TransformData
 {
     public Vector3 position;
     public Quaternion rotation;

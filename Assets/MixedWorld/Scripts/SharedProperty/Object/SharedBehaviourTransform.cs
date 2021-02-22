@@ -54,7 +54,7 @@ namespace MixedWorld.Sharing
         }
     }
 
-    public class SharedTransformData : SharedPropertyBase
+    public class SharedTransformData
     {
         public V p; //localposition
         public Q r; //localrotate
@@ -80,9 +80,8 @@ namespace MixedWorld.Sharing
         private bool isSomeThingHappendWithMe = false;
 
         private bool isBeingManipulated = false;
-
-        public SenderRecieverSharedMode SharedMode
-        {
+    
+        public SenderRecieverSharedMode SharedMode {
             get { return transformData.sharedMode; }
             set
             {
@@ -108,7 +107,7 @@ namespace MixedWorld.Sharing
         {
             yield return new WaitForEndOfFrame();
             Debug.LogFormat("Property changed by {0}", name);
-
+        
             isSomeThingHappendWithMe = true;
 
             // update the placement to match the user's gaze.
@@ -131,14 +130,14 @@ namespace MixedWorld.Sharing
             objectIdentifier = EnsureObjectIdentifier();
             interpolator = EnsureInterpolator();
 
-            yield return new WaitUntil(() => { return objectIdentifier.isInitialized; });
+            yield return new WaitUntil(()=> { return objectIdentifier.isInitialized; });
             if (rootToTransmit == null)
             {
                 rootToTransmit = this.transform;
             }
             transformData = new SharedPropertyManager<SharedTransformData>(objectIdentifier.rootId, objectIdentifier.ObjectId, this.GetType().Name, nameof(transformData));
             transformData.sharedMode = sharedMode;
-
+            
 
             transformData.Value = new SharedTransformData();
 
@@ -248,7 +247,7 @@ namespace MixedWorld.Sharing
         }
         private void OnDisable()
         {
-            // objectDNA?.RemoveComponentItem(this.GetType().Name);
+           // objectDNA?.RemoveComponentItem(this.GetType().Name);
 
             this.gameObject.GetComponent<ManipulationHandler>()?.OnManipulationStarted.RemoveListener(OnManipulationStarted);
             this.gameObject.GetComponent<ManipulationHandler>()?.OnManipulationEnded.RemoveListener(OnManipulationEnded);

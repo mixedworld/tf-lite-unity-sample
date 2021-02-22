@@ -120,15 +120,7 @@ public class Variable<T>
     }
 }
 
-public class SharedPropertyBase
-{
-    private Variable_Status _Status = Variable_Status.New;
-    public Variable_Status Status
-    {
-        get { return _Status; }
-        set { _Status = value; }
-    }
-}
+
 
 public class SharedPropertyManager<T> : ConnectionBase
 {
@@ -202,7 +194,7 @@ public class SharedPropertyManager<T> : ConnectionBase
             combinedTopic = rootTopic + "/" + objectName;
         }
         m_ValueLock = new object();
-        m_Value = new Variable<T>(l => StatusFlag = Variable_Status.Dirty);
+        m_Value = new Variable<T>(l => StatusFlag = Variable_Status.New);
         SetObjectIdAndPropertyId(combinedTopic, className, propertyName);
         Init();
     }
@@ -215,7 +207,7 @@ public class SharedPropertyManager<T> : ConnectionBase
             combinedTopic = rootTopic + "/" + objectName;
         }
         m_ValueLock = new object();
-        m_Value = new Variable<T>(l => StatusFlag = Variable_Status.Dirty, value);
+        m_Value = new Variable<T>(l => StatusFlag = Variable_Status.New, value);
         SetObjectIdAndPropertyId(combinedTopic, className, propertyName);
         Value = value;
         Init();
@@ -229,7 +221,7 @@ public class SharedPropertyManager<T> : ConnectionBase
             combinedTopic = rootTopic + "/" + objectName;
         }
         m_ValueLock = Lock;
-        m_Value = new Variable<T>(l => StatusFlag = Variable_Status.Dirty, value);
+        m_Value = new Variable<T>(l => StatusFlag = Variable_Status.New, value);
         SetObjectIdAndPropertyId(combinedTopic, className, propertyName);
         Value = value;
         Init();
@@ -281,7 +273,7 @@ public class SharedPropertyManager<T> : ConnectionBase
 
         if (sharedMode == SenderRecieverSharedMode.Receiver) return;
 
-        if ((Value as SharedPropertyBase).Status == Variable_Status.Dirty || StatusFlag == Variable_Status.Dirty || StatusFlag == Variable_Status.Refresh)
+        if (StatusFlag == Variable_Status.Dirty || StatusFlag == Variable_Status.Refresh)
         {
             UpdateProperty();
         }
@@ -306,7 +298,7 @@ public class SharedPropertyManager<T> : ConnectionBase
                     RecievedAllRetainMsg();
                     return;
                 }
-                if ((Value as SharedPropertyBase).Status == Variable_Status.Dirty || StatusFlag == Variable_Status.Dirty || StatusFlag == Variable_Status.Refresh)
+                if (StatusFlag == Variable_Status.Dirty || StatusFlag == Variable_Status.Refresh)
                 {
                     UpdateProperty();
                 }
@@ -328,7 +320,7 @@ public class SharedPropertyManager<T> : ConnectionBase
         //});
 
         
-        (Value as SharedPropertyBase).Status = StatusFlag = Variable_Status.Sending;
+        StatusFlag = Variable_Status.Sending;
 
 
         var settings = new JsonSerializerSettings
@@ -360,7 +352,7 @@ public class SharedPropertyManager<T> : ConnectionBase
             if (jsonMeta.Value<string>("id").Equals(ClientId.ToString()))
             {
 
-                (Value as SharedPropertyBase).Status = StatusFlag = Variable_Status.Sended;
+                StatusFlag = Variable_Status.Sended;
                 //my own message
                 //has been ignored
                 if (acceptOwnRetainedMsg)
@@ -382,7 +374,7 @@ public class SharedPropertyManager<T> : ConnectionBase
             try
             {
                 Value = JsonConvert.DeserializeObject<T>(jsonValue.Value<string>("Value"));
-                (Value as SharedPropertyBase).Status = StatusFlag = Variable_Status.Recvied;
+                StatusFlag = Variable_Status.Recvied;
 
                 SampleEventArgs args = new SampleEventArgs();
                 args.senderName = jsonMeta.Value<string>("id");

@@ -6,26 +6,22 @@ using UnbiasedTimeManager;
 using UnityEngine;
 using MixedWorld.Sharing;
 
-public class HelixMove : SharedPropertyBase
+public class HelixMove
 {
-    private Variable<float> _radius;
-    private Variable<float> _speed;
-    public HelixMove()
-    {
-        _radius = new Variable<float>(l => Status = Variable_Status.Dirty);
-        _speed = new Variable<float>(l => Status = Variable_Status.Dirty);
-    }
+    private float _radius;
+    private float _speed;
+
 
     public float Radius
     {
         get { return _radius; }
-        set { _radius.SetValue(value); }
+        set { _radius = value; }
     }
     
     public float Speed
     {
         get { return _speed; }
-        set { _speed.SetValue(value); }
+        set { _speed = value; }
     }
 }
 [RequireComponent(typeof(ObjectIdentifier))]

@@ -10,52 +10,40 @@ using System.Collections.Generic;
 //    public DateTime CreateDate;
 //}
 
-public class ObjectIdentityList : SharedPropertyBase
+public class ObjectIdentityList
 {
-    private Variable<List<ObjectIdentity>> _Accounts;
+    private List<ObjectIdentity> _Accounts;
 
-    public ObjectIdentityList()
-    {
-        _Accounts = new Variable<List<ObjectIdentity>>(l => Status = Variable_Status.Dirty);
-    }
     public List<ObjectIdentity> ObjectIdentities
     {
         get { return _Accounts; }
-        set { _Accounts.SetValue(value); }
+        set { _Accounts = value; }
     }
 }
 
-public class ObjectIdentity : SharedPropertyBase
+public class ObjectIdentity
 {
-    private Variable<string> _ID;
-    private Variable<string> _Name;
-    private Variable<List<string>> _Components;
-    private Variable<DateTime> _CreateDataTime;
-
-    public ObjectIdentity()
-    {
-        _ID = new Variable<string>(l => Status = Variable_Status.Dirty);
-        _Name = new Variable<string>(s => Status = Variable_Status.Dirty);
-        _Components = new Variable<List<string>>(l => Status = Variable_Status.Dirty);
-        _CreateDataTime = new Variable<DateTime>(l => Status = Variable_Status.Dirty);
-    }
+    private string _ID;
+    private string _Name;
+    private List<string> _Components;
+    private DateTime _CreateDataTime;
 
     public string ID
     {
         get{ return _ID; }
-        set{ _ID.SetValue(value);}
+        set{ _ID = value;}
     }
 
     public List<string> Components
     {
         get{ return _Components; }
-        set{ _Components.SetValue(value); }
+        set{ _Components = value; }
     }
     
     public DateTime CreatedDate
     {
         get { return _CreateDataTime; }
-        set { _CreateDataTime.SetValue(value);}
+        set { _CreateDataTime = value;}
     }
 
 }

@@ -12,26 +12,22 @@ using UnityEngine;
 namespace MixedWorld.Sharing
 {
 
-    public class HeartbeatTimer : SharedPropertyBase
+    public class HeartbeatTimer
     {
-        private Variable<DateTime> _LastBeatDataTime;
-        private Variable<ulong> _UnbiasedTimeULong;
+        private DateTime _LastBeatDataTime;
+        private ulong _UnbiasedTimeULong;
 
-        public HeartbeatTimer()
-        {
-            _LastBeatDataTime = new Variable<DateTime>(l => Status = Variable_Status.Dirty);
-            _UnbiasedTimeULong = new Variable<ulong>(l => Status = Variable_Status.Dirty);
-        }
+
 
         public DateTime LastBeatDataTime
         {
             get { return _LastBeatDataTime; }
-            set { _LastBeatDataTime.SetValue(value); }
+            set { _LastBeatDataTime = value; }
         }
         public ulong UnbiasedTimeULong
         {
             get { return _UnbiasedTimeULong; }
-            set { _UnbiasedTimeULong.SetValue(value); }
+            set { _UnbiasedTimeULong = value; }
         }
 
     }

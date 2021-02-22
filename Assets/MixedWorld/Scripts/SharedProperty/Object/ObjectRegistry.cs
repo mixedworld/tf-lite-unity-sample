@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class ObjectRegistryList : SharedPropertyBase
+public class ObjectRegistryList
 {
     public HashSet<string> ObjectIds;
 }
@@ -31,7 +31,7 @@ public class ObjectRegistry : Singleton<ObjectRegistry>
             if(localBufferObjectRegistryList.ObjectIds.Count > 0)
             {
                 objectRegistryList.Value.ObjectIds = MergeLists(localBufferObjectRegistryList.ObjectIds, objectRegistryList.Value.ObjectIds);
-                objectRegistryList.Value.Status = Variable_Status.Dirty;
+                objectRegistryList.StatusFlag = Variable_Status.Dirty;
                 localBufferObjectRegistryList.ObjectIds.Clear();
             }
         }
@@ -83,7 +83,7 @@ public class ObjectRegistry : Singleton<ObjectRegistry>
             objectRegistryList.Value.ObjectIds.Add(objectId);
 
             if (objectRegistryList.Value.ObjectIds.Count != tmpCount)
-                objectRegistryList.Value.Status = Variable_Status.Dirty;
+                objectRegistryList.StatusFlag = Variable_Status.Dirty;
         }
         else
         {
@@ -111,7 +111,7 @@ public class ObjectRegistry : Singleton<ObjectRegistry>
 
             objectRegistryList.Value.ObjectIds.Remove(objectId);
             if (objectRegistryList.Value.ObjectIds.Count != tmpCount)
-                objectRegistryList.Value.Status = Variable_Status.Dirty;
+                objectRegistryList.StatusFlag = Variable_Status.Dirty;
         }
         else
         {
