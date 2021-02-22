@@ -106,7 +106,7 @@ namespace MixedWorld.Sharing
         private IEnumerator ObjectChanged(string name)
         {
             yield return new WaitForEndOfFrame();
-            Debug.LogFormat("Property changed by {0}", name);
+            //Debug.LogFormat("Property changed by {0}", name);
         
             isSomeThingHappendWithMe = true;
             

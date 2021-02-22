@@ -100,7 +100,7 @@ namespace MixedWorld.Sharing
         private IEnumerator SomeClientObjectChanged(string name)
         {
             yield return new WaitForEndOfFrame();
-            Debug.Log("<3 " +name + " gameobject: " + transform.name);
+            //Debug.Log("<3 " +name + " gameobject: " + transform.name);
             idleLastUpdateTime = Time.realtimeSinceStartup;
         }
 
