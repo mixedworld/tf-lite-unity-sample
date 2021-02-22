@@ -109,7 +109,7 @@ namespace MixedWorld.Sharing
             Debug.LogFormat("Property changed by {0}", name);
         
             isSomeThingHappendWithMe = true;
-
+            
             // update the placement to match the user's gaze.
             interpolator.SetTargetLocalPosition(transformData.Value.p.getVector3());
 
