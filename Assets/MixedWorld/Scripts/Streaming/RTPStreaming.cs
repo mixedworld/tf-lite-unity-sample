@@ -220,11 +220,11 @@ namespace MixedWorld.Streaming
                 cameraParameters.pixelFormat = CapturePixelFormat.BGRA32;
                 cameraParameters.blendMode = BlendMode.Blend;
 
-                m_VideoCapture.StartVideoModeAsync(cameraParameters, OnStartedVideoCaptureMode);
-                if (m_cameraImage != null)
-                    m_cameraImage.texture = CameraTexture;
-                if (m_previewImage != null)
-                 m_previewImage.texture = BlendTexture;
+                m_VideoCapture.StartVideoModeAsync(cameraParameters, OnStartedVideoCaptureMode, camOnly);
+                //if (m_cameraImage = null)
+                m_cameraImage.texture = CameraTexture;
+                //if (m_previewImage != null)
+                m_previewImage.texture = BlendTexture;
                 if (m_handtracking != null)
                 {
                     m_handtracking.SetActive(true);
@@ -242,7 +242,7 @@ namespace MixedWorld.Streaming
         /// <param name="result"> The result.</param>
         void OnStartedVideoCaptureMode(NRVideoCapture.VideoCaptureResult result)
         {
-            m_VideoCapture.StartRecordingAsync(RTPPath, OnStartedRecordingVideo, camOnly);
+            m_VideoCapture.StartRecordingAsync(RTPPath, OnStartedRecordingVideo);
         }
 
         /// <summary> Executes the 'stopped video capture mode' action. </summary>

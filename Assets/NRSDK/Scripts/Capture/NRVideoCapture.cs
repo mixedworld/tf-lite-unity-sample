@@ -119,7 +119,7 @@ namespace NRKernal.Record
         /// <summary> Starts recording asynchronous. </summary>
         /// <param name="filename">                        Filename of the file.</param>
         /// <param name="onStartedRecordingVideoCallback"> The on started recording video callback.</param>
-        public void StartRecordingAsync(string filename, OnStartedRecordingVideoCallback onStartedRecordingVideoCallback, bool camOnly = false)
+        public void StartRecordingAsync(string filename, OnStartedRecordingVideoCallback onStartedRecordingVideoCallback)
         {
             var result = new VideoCaptureResult();
             if (IsRecording)
@@ -133,7 +133,7 @@ namespace NRKernal.Record
                 {
                     var behaviour = m_CaptureContext.GetBehaviour();
                     ((NRRecordBehaviour)behaviour).SetOutPutPath(filename);
-                    m_CaptureContext.StartCapture(camOnly);
+                    m_CaptureContext.StartCapture();
                     IsRecording = true;
                     result.resultType = CaptureResultType.Success;
                     onStartedRecordingVideoCallback?.Invoke(result);
