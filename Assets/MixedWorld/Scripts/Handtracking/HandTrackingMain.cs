@@ -96,6 +96,7 @@ namespace MixedWorld.Handtracking
                 Debug.Log($"Starting camera: {cameraName}");
             }
             targetRT.dimension = cameraView.texture.dimension;
+            Debug.Log("Handtracking Main: Target Texture Dimension: " + targetRT.dimension);
             //draw = new PrimitiveDraw();
         }
 

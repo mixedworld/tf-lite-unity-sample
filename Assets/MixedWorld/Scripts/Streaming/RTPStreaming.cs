@@ -23,7 +23,7 @@ namespace MixedWorld.Streaming
         private RTPConfigView m_RTPConfigView;
         /// <summary> The Handtracking GameObject </summary>
         [SerializeField]
-        private GameObject m_handtracking;
+        private GameObject m_handtracking = null;
         [SerializeField]
         private bool camOnly = false;
         /// <summary>
@@ -225,8 +225,10 @@ namespace MixedWorld.Streaming
                     m_cameraImage.texture = CameraTexture;
                 if (m_previewImage != null)
                  m_previewImage.texture = BlendTexture;
-
-                m_handtracking?.SetActive(true);
+                if (m_handtracking != null)
+                {
+                    m_handtracking.SetActive(true);
+                }
             }
         }
 

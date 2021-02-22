@@ -16,13 +16,19 @@ public class MWTrackableHand : MonoBehaviour
 
         private float lastTracked = 0f;
         private bool hidden = false;
+        private bool locked = false;
 
         private Vector3[] m_joints = new Vector3[21];
+        private Vector3[] m_clonedJoints = new Vector3[21];
+
         public Vector3[] SharedJoints
         {
             get
             {
-                return m_joints;
+                locked = true;
+                m_clonedJoints = (Vector3[])m_joints.Clone();
+                locked = false;
+                return m_clonedJoints;
             }
         }
 
@@ -92,7 +98,10 @@ public class MWTrackableHand : MonoBehaviour
             float smoothDelta = Time.deltaTime * smoothSpeed;
             for (int i = 0; i < jointPos.Length; i++)
             {
-                m_joints[i] = jointPos[i];
+                if (!locked)
+                {
+                    m_joints[i] = jointPos[i];
+                }
                 Joints[i].localPosition = Vector3.Lerp(Joints[i].localPosition, jointPos[i], smoothDelta);
             }
             // Connection Bones

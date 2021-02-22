@@ -44,7 +44,7 @@ public class SharedBehaviourHand : MonoBehaviour
         //copy to sensor
         if (hand != null)
         {
-            hand.UpdateJoints(sharedJoints.Value.Joints, true);
+            hand.UpdateJoints((Vector3[])sharedJoints.Value.Joints.Clone(), true);
         }
     }
     private void OnEnable()
@@ -88,6 +88,7 @@ public class SharedBehaviourHand : MonoBehaviour
         if(hand != null && hand.isDirty)
         {
             sharedJoints.Value.Joints = hand.SharedJoints;
+            hand.isDirty = false;
             sharedJoints.StatusFlag = Variable_Status.Dirty;
         }
         sharedJoints.Update();
