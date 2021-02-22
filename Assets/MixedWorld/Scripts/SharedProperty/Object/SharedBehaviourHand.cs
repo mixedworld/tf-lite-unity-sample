@@ -6,7 +6,7 @@ using UnityEngine;
 using MixedWorld.Sharing;
 using MixedWorld.Util;
 
-public class HandJoints : SharedPropertyBase
+public class HandJoints
 {
     private Vector3 [] joints;
     public HandJoints()

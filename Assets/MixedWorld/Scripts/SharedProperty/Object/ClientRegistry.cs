@@ -6,7 +6,7 @@ using UnityEngine;
 namespace MixedWorld.Sharing
 {
 
-    public class ObjectClientList : SharedPropertyBase
+    public class ObjectClientList
     {
         public HashSet<string> ClientIds;
     }
@@ -74,12 +74,12 @@ namespace MixedWorld.Sharing
                 int tmpCount = objectClientList.Value.ClientIds.Count;
                 ResyncBuffer();
                 objectClientList.Value.ClientIds.Add(objectId);
-                objectClientList.Value.Status = Variable_Status.Dirty;
+                objectClientList.StatusFlag = Variable_Status.Dirty;
             }
             else
             {
                 localBufferObjectClientList.ClientIds.Add(objectId);
-                objectClientList.Value.Status = Variable_Status.Dirty;
+                objectClientList.StatusFlag = Variable_Status.Dirty;
             }
 
         }
@@ -97,12 +97,12 @@ namespace MixedWorld.Sharing
                 ResyncBuffer();
                 bool success = objectClientList.Value.ClientIds.Remove(objectId);
                 //Debug.Log($"Client {objectId} removed from the list {success}");
-                objectClientList.Value.Status = Variable_Status.Dirty;
+                objectClientList.StatusFlag = Variable_Status.Dirty;
             }
             else
             {
                 localBufferObjectClientList.ClientIds.Remove(objectId);
-                objectClientList.Value.Status = Variable_Status.Dirty;
+                objectClientList.StatusFlag = Variable_Status.Dirty;
             }
         }
 
@@ -112,7 +112,7 @@ namespace MixedWorld.Sharing
             {
                 objectClientList.Value.ClientIds = MergeLists(localBufferObjectClientList.ClientIds, objectClientList.Value.ClientIds);
                 localBufferObjectClientList.ClientIds.Clear();
-                objectClientList.Value.Status = Variable_Status.Dirty;
+                objectClientList.StatusFlag = Variable_Status.Dirty;
             }
         }
 

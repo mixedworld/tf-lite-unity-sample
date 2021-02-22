@@ -11,7 +11,7 @@ using UnityEngine;
 namespace MixedWorld.Sharing
 {
 
-    public class PrefabType : SharedPropertyBase
+    public class PrefabType
     {
         public string name;
     }

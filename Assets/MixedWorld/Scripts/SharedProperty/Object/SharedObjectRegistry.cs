@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace MixedWorld.Sharing
 {
-    public class ObjectList : SharedPropertyBase
+    public class ObjectList
     {
         public HashSet<string> objectIds;
     }
@@ -68,12 +68,12 @@ namespace MixedWorld.Sharing
                 int tmpCount = objectList.Value.objectIds.Count;
                 ResyncBuffer();
                 objectList.Value.objectIds.Add(objectId);
-                objectList.Value.Status = Variable_Status.Dirty;
+                objectList.StatusFlag = Variable_Status.Dirty;
             }
             else
             {
                 localBufferObjectList.objectIds.Add(objectId);
-                objectList.Value.Status = Variable_Status.Dirty;
+                objectList.StatusFlag = Variable_Status.Dirty;
             }
 
         }
@@ -90,12 +90,12 @@ namespace MixedWorld.Sharing
                 int tmpCount = objectList.Value.objectIds.Count;
                 ResyncBuffer();
                 bool success = objectList.Value.objectIds.Remove(objectId);
-                objectList.Value.Status = Variable_Status.Dirty;
+                objectList.StatusFlag = Variable_Status.Dirty;
             }
             else
             {
                 localBufferObjectList.objectIds.Remove(objectId);
-                objectList.Value.Status = Variable_Status.Dirty;
+                objectList.StatusFlag = Variable_Status.Dirty;
             }
         }
 
@@ -105,7 +105,7 @@ namespace MixedWorld.Sharing
             {
                 objectList.Value.objectIds = MergeLists(localBufferObjectList.objectIds, objectList.Value.objectIds);
                 localBufferObjectList.objectIds.Clear();
-                objectList.Value.Status = Variable_Status.Dirty;
+                objectList.StatusFlag = Variable_Status.Dirty;
             }
         }
 

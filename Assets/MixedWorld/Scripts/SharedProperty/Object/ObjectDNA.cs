@@ -8,7 +8,7 @@ using MixedWorld.Sharing;
 
 
 
-public class ComponentList : SharedPropertyBase
+public class ComponentList 
 {
     public HashSet<string> components;
 }
@@ -48,7 +48,7 @@ public class ObjectDNA : MonoBehaviour
             {
                 if (!componentList.Value.components.Contains(component))
                 {
-                    componentList.Value.Status = Variable_Status.Dirty;
+                    componentList.StatusFlag = Variable_Status.Dirty;
                     break;
                 }
             }
@@ -127,7 +127,7 @@ public class ObjectDNA : MonoBehaviour
             componentList.Value.components.Add(objectId);
 
             if (componentList.Value.components.Count != tmpCount)
-                componentList.Value.Status = Variable_Status.Dirty;
+                componentList.StatusFlag = Variable_Status.Dirty;
         }
         else
         {
@@ -153,7 +153,7 @@ public class ObjectDNA : MonoBehaviour
             }
 
             componentList.Value.components.Remove(objectId);
-            componentList.Value.Status = Variable_Status.Dirty;
+            componentList.StatusFlag = Variable_Status.Dirty;
         }
         else
         {
