@@ -81,9 +81,9 @@ public class HandTrackingSample : MonoBehaviour
         //cameraName = "Integrated Camera";
         if (isNreal)
         {
-            nrealCamTexture = targetRT;
-            scale.y = -1f;
-            offset.y = 1f;
+            //nrealCamTexture = targetRT;
+            //scale.y = -1f;
+            //offset.y = 1f;
         }
         else
         {
@@ -92,7 +92,7 @@ public class HandTrackingSample : MonoBehaviour
             webcamTexture.Play();
             Debug.Log($"Starting camera: {cameraName}");
         }
-        targetRT.dimension = cameraView.texture.dimension;
+        //targetRT.dimension = cameraView.texture.dimension;
         //draw = new PrimitiveDraw();
     }
 
