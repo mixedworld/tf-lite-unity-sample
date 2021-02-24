@@ -113,7 +113,7 @@ public class HandTrackingSample : MonoBehaviour
         else
         {
             Graphics.Blit(cameraView.texture, targetRT, NoEffectsMat);
-
+            //targetRT = (RenderTexture)cameraView.texture;
             //Graphics.Blit(cameraView.texture, targetRT, new Vector2(1.0f, -1.0f), new Vector2(0.0f, 1.0f));
         }
 

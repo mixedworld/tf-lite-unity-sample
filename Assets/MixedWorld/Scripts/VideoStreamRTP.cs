@@ -102,6 +102,8 @@ namespace MixedWorld.VideoStream
         [SerializeField] RawImage blendTexture = null;
         [SerializeField] GameObject handtracking = null;
         [SerializeField] bool camOnly = false;
+        [SerializeField] bool handtrackingEnabled = false;
+
 
         public string receiverURL = @"mwhighfive";
         /// <summary> The video capture. </summary>
@@ -154,7 +156,7 @@ namespace MixedWorld.VideoStream
 
                 camTexture.texture = CameraTexture;
                 blendTexture.texture = BlendTexture;
-                handtracking.SetActive(true);
+                handtracking.SetActive(handtrackingEnabled);
                 //Previewer.SetData(m_VideoCapture.PreviewTexture, true);
             }
         }
