@@ -9,11 +9,11 @@ using UnityEngine;
 namespace MixedWorld.Sharing
 {
 
-    public class V
+    public class FlatVector3
     {
         private Vector3 v;
         public float x, y, z;
-        public V()
+        public FlatVector3()
         {
             v = new Vector3(x, y, z);
         }
@@ -31,11 +31,11 @@ namespace MixedWorld.Sharing
         }
     }
 
-    public class Q
+    public class FlatQuaternion
     {
         private Quaternion q;
         public float x, y, z, w;
-        public Q()
+        public FlatQuaternion()
         {
             q = new Quaternion(x, y, z, w);
         }
@@ -56,9 +56,9 @@ namespace MixedWorld.Sharing
 
     public class SharedTransformData
     {
-        public V p; //localposition
-        public Q r; //localrotate
-        public V s; //localscale
+        public FlatVector3 p; //localposition
+        public FlatQuaternion r; //localrotate
+        public FlatVector3 s; //localscale
     }
 
     [RequireComponent(typeof(ObjectIdentifier))]
@@ -141,9 +141,9 @@ namespace MixedWorld.Sharing
 
             transformData.Value = new SharedTransformData();
 
-            transformData.Value.p = new V();
-            transformData.Value.r = new Q();
-            transformData.Value.s = new V();
+            transformData.Value.p = new FlatVector3();
+            transformData.Value.r = new FlatQuaternion();
+            transformData.Value.s = new FlatVector3();
 
             transformData.Value.p.setVector3(rootToTransmit.localPosition);
             transformData.Value.r.setQuaternion(rootToTransmit.localRotation);

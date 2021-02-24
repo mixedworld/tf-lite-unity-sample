@@ -8,13 +8,13 @@ using MixedWorld.Util;
 
 public class HandJoints
 {
-    private Vector3 [] joints;
+    private FlatVector3 [] joints;
     public HandJoints()
     {
-        joints = new Vector3[21];
+        joints = new FlatVector3[21];
     }
 
-    public Vector3[] Joints
+    public FlatVector3[] Joints
     {
         get { return joints; }
         set { joints = value; }
