@@ -8,13 +8,13 @@ using MixedWorld.Util;
 
 public class HandJoints
 {
-    private V [] joints;
+    private Vector3 [] joints;
     public HandJoints()
     {
-        joints = new V[21];
+        joints = new Vector3[21];
     }
 
-    public V[] Joints
+    public Vector3[] Joints
     {
         get { return joints; }
         set { joints = value; }
@@ -44,12 +44,7 @@ public class SharedBehaviourHand : MonoBehaviour
         //copy to sensor
         if (hand != null)
         {
-            Vector3[] vec = new Vector3[21];
-            for (int i = 0; i < 21; i++)
-            {
-                vec[i] = sharedJoints.Value.Joints[i].getVector3();
-            }
-            hand.UpdateJoints((Vector3[])vec.Clone(), true);
+            hand.UpdateJoints((Vector3[])sharedJoints.Value.Joints.Clone(), true);
         }
     }
     private void OnEnable()
@@ -89,13 +84,10 @@ public class SharedBehaviourHand : MonoBehaviour
         }
         sharedJoints.sharedMode = sharedMode;
 
-
-        if (hand != null && hand.isDirty)
+        
+        if(hand != null && hand.isDirty)
         {
-            for (int i = 0; i < 21; i++)
-            {
-                sharedJoints.Value.Joints[i].setVector3(hand.SharedJoints[i]);
-            }
+            sharedJoints.Value.Joints = hand.SharedJoints;
             hand.isDirty = false;
             sharedJoints.StatusFlag = Variable_Status.Dirty;
         }
